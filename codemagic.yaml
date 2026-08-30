@@ -1,8 +1,7 @@
 
-
 workflows:
   android-workflow:
-    name: Native Android Build
+    name: Native Android Debug Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     triggering:
@@ -12,9 +11,9 @@ workflows:
       - name: Generate Gradle Wrapper
         script: |
           gradle wrapper
-      - name: Build Android APK
+      - name: Build Android Debug APK
         script: |
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/apk/**/*.apk
