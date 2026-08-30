@@ -9,7 +9,7 @@
         android:supportsRtl="true">
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.esp8266_report_android.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
