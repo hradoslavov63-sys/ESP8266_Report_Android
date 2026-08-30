@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com">
+<manifest xmlns:android="http://github.com">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" xmlns:android="http://github.com" />
 
     <application
         android:allowBackup="true"
         android:label="ESP8266 Report"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        xmlns:android="http://github.com">
         
         <activity
             android:name="com.example.esp8266_report_android.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            xmlns:android="http://github.com">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" xmlns:android="http://github.com" />
+                <category android:name="android.intent.category.LAUNCHER" xmlns:android="http://github.com" />
             </intent-filter>
         </activity>
     </application>
