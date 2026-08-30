@@ -1,12 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://android.com"
+    xmlns:tools="http://android.com"
+    package="com.example.esp8266_report_android">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:theme="@style/AppTheme"
-        android:label="ESP8266 REPORT SYSTEM"
-        android:usesCleartextTraffic="true">
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ESP8266_Report_Android">
+        
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -14,4 +23,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
