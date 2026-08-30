@@ -1,48 +1,19 @@
 
-yamlworkflows:
+workflows:
   android-workflow:
-    name: Native Android Signed Release
+    name: Native Android Debug Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     triggering:
       events:
         - push
-    environment:
-      vars:
-        MY_PASS: "904710563"
-        MY_ALIAS: "mykey"
     scripts:
       - name: Generate Gradle Wrapper
         script: |
           gradle wrapper
-      - name: Create Keystore File
-        script: |
-          # Създаваме официален ключ директно на сървъра
-          keytool -genkey -v -keystore app/local.keystore -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias "$MY_ALIAS" -storepass "$MY_PASS" -keypass "$MY_PASS" -dname "CN=Android, O=AI, C=BG"
-      - name: Inject Signing Configuration into build.gradle
-        script: |
-          # Вграждаме настройките за подписване директно в конфигурацията на приложението
-          cat <<EOT >> app/build.gradle
-
-          android {
-              signingConfigs {
-                  release {
-                      storeFile file('local.keystore')
-                      storePassword '$MY_PASS'
-                      keyAlias '$MY_ALIAS'
-                      keyPassword '$MY_PASS'
-                  }
-              }
-              buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-          EOT
-      - name: Build Android Release APK
+      - name: Build Android Debug APK
         script: |
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/apk/**/*.apk
