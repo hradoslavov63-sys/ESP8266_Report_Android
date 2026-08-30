@@ -1,5 +1,5 @@
 
-workflows:
+yamlworkflows:
   android-workflow:
     name: Native Android Signed Release
     max_build_duration: 60
@@ -9,24 +9,37 @@ workflows:
         - push
     environment:
       vars:
-        # 1. ЗАМЕНЕТЕ С ВАШАТА ПАРОЛА:
         MY_PASS: "904710563"
-        # 2. ЗАМЕНЕТЕ С ВАШИЯ ALIAS (ако е различен):
         MY_ALIAS: "mykey"
     scripts:
       - name: Generate Gradle Wrapper
         script: |
           gradle wrapper
-      - name: Create Temporary Keystore
+      - name: Create Keystore File
         script: |
-          # Сървърът сам ще си генерира ключ в движение, за да не се налага да го качвате
+          # Създаваме официален ключ директно на сървъра
           keytool -genkey -v -keystore app/local.keystore -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias "$MY_ALIAS" -storepass "$MY_PASS" -keypass "$MY_PASS" -dname "CN=Android, O=AI, C=BG"
-      - name: Set Up Code Signing
+      - name: Inject Signing Configuration into build.gradle
         script: |
-          echo "StorePassword=$MY_PASS" >> app/signing.properties
-          echo "KeyPassword=$MY_PASS" >> app/signing.properties
-          echo "KeyAlias=$MY_ALIAS" >> app/signing.properties
-          echo "StoreFile=local.keystore" >> app/signing.properties
+          # Вграждаме настройките за подписване директно в конфигурацията на приложението
+          cat <<EOT >> app/build.gradle
+
+          android {
+              signingConfigs {
+                  release {
+                      storeFile file('local.keystore')
+                      storePassword '$MY_PASS'
+                      keyAlias '$MY_ALIAS'
+                      keyPassword '$MY_PASS'
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+          EOT
       - name: Build Android Release APK
         script: |
           chmod +x gradlew
