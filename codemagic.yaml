@@ -1,7 +1,6 @@
-
 workflows:
   android-workflow:
-    name: Native Android Debug Build
+    name: Native Android Automation Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     triggering:
@@ -11,6 +10,28 @@ workflows:
       - name: Generate Gradle Wrapper
         script: |
           gradle wrapper
+      - name: Overwrite and Force Clean Manifest
+        script: |
+          rm -f app/src/main/AndroidManifest.xml
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://github.com">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <application
+                  android:allowBackup="true"
+                  android:label="ESP8266 Report"
+                  android:supportsRtl="true">
+                  <activity
+                      android:name="com.example.esp8266_report_android.MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
       - name: Build Android Debug APK
         script: |
           chmod +x gradlew
